@@ -1,11 +1,7 @@
-export type GetWeatherForecastRequest = {
-  latitude: number;
-  longitude: number;
-  date: string;
-};
+import { LocationForecastRequest, LocationForecastResponse } from "./weather-api.types";
 
 export abstract class WeatherApi {
-  abstract getWeatherForecast(
-    request?: GetWeatherForecastRequest,
-  ): Promise<any[]> | void;
+  abstract getHourlyForecast(
+    request?: LocationForecastRequest,
+  ): Promise<LocationForecastResponse>;
 }

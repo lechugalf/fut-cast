@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { IConfigService } from '@shared/config/config.schema';
+import { EnvType } from '@app/shared/config/config.schema';
+import { SeederService } from './database.seeder';
 
 @Module({
   imports: [
@@ -9,7 +10,7 @@ import { IConfigService } from '@shared/config/config.schema';
       imports: [ConfigModule],
       inject: [ConfigService],
 
-      useFactory: (configService: IConfigService) => ({
+      useFactory: (configService: ConfigService<EnvType>) => ({
         type: 'postgres',
         host: configService.get('DATABASE_HOST'),
         port: configService.get('DATABASE_PORT'),
@@ -18,11 +19,14 @@ import { IConfigService } from '@shared/config/config.schema';
         database: configService.get('DATABASE_NAME'),
         entities: [__dirname + '/../../**/*.entity.{js,ts}'],
 
-        // ¡CLAVE! Sincroniza automáticamente tu esquema de BD.
-        // Genial para desarrollo/prueba, NUNCA para producción.
+        // TODO: Quitar en prod, usar migraciones en lugar de synchronize
         synchronize: true,
+
+        // Seeder
+        seeds: ['src/app/shared/database/seeders/*.js'],
       }),
     }),
   ],
+  providers: [SeederService],
 })
 export class DatabaseModule {}

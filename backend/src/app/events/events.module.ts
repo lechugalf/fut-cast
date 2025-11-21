@@ -1,30 +1,23 @@
+import { League, Team, Venue } from '@app/shared/entities';
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ExternalApiModule } from '@shared/external-api/external-api.module';
+import { AnalysisModule } from '../analysis/analysis.module';
+import { WeatherModule } from '../weather/weather.module';
+import { Event } from './event.entity';
+import { EventsSyncService } from './events-sync.service';
 import { EventsController } from './events.controller';
 import { EventsService } from './events.service';
-import { ExternalApiModule } from '@shared/external-api/external-api.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Event } from './event.entity';
-import { WeatherModule } from '../weather/weather.module';
-import { AnalysisModule } from '../analysis/analysis.module';
-
-// TODO: WE MIGHT NEED THESE AS REPOSITORIES
-//import { Team } from '@shared/entities/team.entity';
-//import { Venue } from '@shared/entities/venue.entity';
-//import { League } from '@shared/entities/league.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      Event,
-      //Team,
-      //Venue,
-      //League
-    ]),
+    TypeOrmModule.forFeature([Event, League, Venue, Team]),
     ExternalApiModule,
     WeatherModule,
     AnalysisModule,
   ],
   controllers: [EventsController],
-  providers: [EventsService],
+  providers: [EventsService, EventsSyncService],
+  exports: [EventsSyncService],
 })
-export class EventsModule {}
+export class EventsModule { }

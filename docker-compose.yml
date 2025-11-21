@@ -1,0 +1,66 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: fut-cast-postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
+    ports:
+      - "${DATABASE_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-postgres} -d ${DATABASE_NAME:-fut_cast}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fut-cast-network
+
+  backend:
+    build:
+      context: ./backend
+      target: production
+    container_name: fut-cast-backend
+    environment:
+      NODE_ENV: production
+      DATABASE_HOST: postgres
+      # Overrides for Docker networking if needed, otherwise values from .env are used
+    ports:
+      - "3001:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # volumes: # Removed to use the built artifacts from the image
+    #   - ./backend:/usr/src/app
+    #   - /usr/src/app/node_modules
+    command: node dist/main
+    networks:
+      - fut-cast-network
+
+  frontend:
+    image: node:22-alpine
+    working_dir: /app
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+    environment:
+      # Override API URL if needed for server-side calls within Docker network
+      # NEXT_PUBLIC_API_URL: http://localhost:3001 
+      pass: true # Placeholder to keep yaml valid if empty
+    networks:
+      - fut-cast-network
+
+volumes:
+  postgres_data:
+
+networks:
+  fut-cast-network:

@@ -6,6 +6,7 @@ export interface ExternalVenue {
     country: string;
     location: string;
     rawTimezone: string;
+    strThumb: string;
     coords: {
         lat: number;
         lng: number;

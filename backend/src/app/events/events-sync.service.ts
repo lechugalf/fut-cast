@@ -226,6 +226,7 @@ export class EventsSyncService {
 
     const newVenue = this.venuesRepository.create({
       externalId: venueFromApi.externalId,
+      thumbnailUrl: venueFromApi.strThumb,
       name: venueFromApi.name,
       country: venueFromApi.country,
       location: venueFromApi.location,

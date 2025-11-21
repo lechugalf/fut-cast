@@ -5,6 +5,7 @@ export type VenueDto = {
   name: string;
   location: string;
   country: string;
+  img: string | null;
   coords: {
     lat: number;
     lng: number;

@@ -31,6 +31,9 @@ export class Venue {
   @OneToMany(() => WeatherHourly, (wh) => wh.venue)
   hourlyForecasts: WeatherHourly[];
 
+  @Column({ type: 'text', nullable: true })
+  thumbnailUrl: string | null;
+
   @Column({
     type: 'jsonb',
     nullable: true,

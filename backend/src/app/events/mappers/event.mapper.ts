@@ -63,6 +63,7 @@ export class EventMapper {
         name: event.venue.name,
         location: event.venue.location,
         country: event.venue.country,
+        img: event.venue.img,
         coords: {
           lat: event.venue.coords.lat,
           lng: event.venue.coords.lng,

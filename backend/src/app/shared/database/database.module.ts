@@ -19,14 +19,13 @@ import { SeederService } from './database.seeder';
         database: configService.get('DATABASE_NAME'),
         entities: [__dirname + '/../../**/*.entity.{js,ts}'],
 
-        // TODO: Quitar en prod, usar migraciones en lugar de synchronize
-        synchronize: true,
-
-        // Seeder
-        seeds: ['src/app/shared/database/seeders/*.js'],
+        synchronize: configService.get('NODE_ENV') !== 'production',
+        migrationsRun: configService.get('NODE_ENV') === 'production',
+        migrations: [__dirname + '/../../migrations/*.{js,ts}'],
+        seeds: [__dirname + '/seeders/*.seeder.{js,ts}'],
       }),
     }),
   ],
   providers: [SeederService],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }

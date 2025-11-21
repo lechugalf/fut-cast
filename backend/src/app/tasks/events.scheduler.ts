@@ -8,13 +8,14 @@ export class EventsScheduler {
 
   constructor(private readonly eventSyncService: EventsSyncService) { }
 
+  @Cron(new Date(Date.now() + 60 * 1000))
   @Cron(CronExpression.EVERY_HOUR, { disabled: false })
   async pullUpcomingEvents() {
     try {
       this.logger.log('Starting upcoming events pull...');
       await this.eventSyncService.pullUpcomingEvents();
     } catch (error) {
-      this.logger.error('Error pulling & syncing upcoming events:', error);
+      this.logger.error('Error pulling & syncing upcoming events', error?.status);
     }
   }
 }

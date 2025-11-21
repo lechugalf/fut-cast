@@ -1,4 +1,5 @@
 import { League } from '@app/shared/entities/league.entity';
+import { Logger } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Seeder } from 'typeorm-extension';
 
@@ -29,7 +30,9 @@ const mls = {
 };
 
 export default class LeagueSeeder implements Seeder {
+  private logger = new Logger(LeagueSeeder.name);
   public async run(dataSource: DataSource): Promise<any> {
+    this.logger.log('Seeding leagues...');
     const repository = dataSource.getRepository(League);
     const leagues = [League.create(laLiga), League.create(mls)];
     await repository

@@ -204,6 +204,7 @@ export const mapRawToVenue = (rawVenue: VenueRawData): ExternalVenue => {
   const coords = parseCoords(rawVenue.strMap);
 
   return {
+    strThumb: rawVenue.strThumb,
     externalId: rawVenue.idVenue,
     name: rawVenue.strVenue,
     country: rawVenue.strCountry,

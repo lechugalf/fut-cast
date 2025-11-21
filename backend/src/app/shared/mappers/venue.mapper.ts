@@ -10,6 +10,7 @@ export class VenueMapper {
       country: entity.country,
       location: entity.location,
       rawTimezone: entity.rawTimezone,
+      img: entity.thumbnailUrl,
       coords: {
         lat: entity.latitude,
         lng: entity.longitude,
